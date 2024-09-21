@@ -1,0 +1,22 @@
+div.MMM-LunchBox {
+    text-align: left;
+}
+
+div.MMM-LunchBox h3 {
+    line-height: normal;
+    display: inline;
+    color: #fff;
+}
+
+div.MMM-LunchBox h2 {
+    color: #fff;
+}
+
+div.MMM-LunchBox div.menu-item p {
+    display: inline;
+    color: #ccc;
+}
+
+div.MMM-LunchBox {
+    max-width: 300px;
+}
