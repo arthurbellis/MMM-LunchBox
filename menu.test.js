@@ -1,0 +1,85 @@
+/**
+ * @jest-environment jest-environment-jsdom
+ */
+
+const fs = require('fs');
+
+
+describe("Tests", () => {
+    const Menu = require("./menu.js");
+
+    test('generate menu html runs', async () => {
+        let result = await Menu.generateHTML({}, new Date(2022, 8, 5, 10));
+        expect(result.length).toBeGreaterThan(10); // something long-ish
+    });
+
+    test("Parser finds 5 days in sample file and picks the right one", async () => {
+        const sampleApiResponse = {
+          "status": "success",
+          "isSuccessful": true,
+          "responseObject": {
+            "response": [
+              {
+                "menuId": 1,
+                "menuName": "ASIJ Cafeteria Lunch Menu",
+                "menuWeekId": 1,
+                "startDateUtc": "2025-08-17T15:00:00.000Z",
+                "endDateUtc": "2025-08-24T14:59:59.999Z",
+                "menuWeekNote": null,
+                "menuNotes": "",
+                "salesBusinessTypeId": 1,
+                "salesBusinessTypeName": "Cafeteria",
+                "menuDays": [
+                  {
+                    "id": 1,
+                    "menuId": 1,
+                    "menuWeekId": 1,
+                    "isOpen": true,
+                    "eventName": null,
+                    "startDateUtc": "2025-08-17T15:00:00.000Z",
+                    "menuItems": [
+                      {
+                        "id": 1,
+                        "baseProductId": 431,
+                        "baseProductName": "Philly Cheesesteak Sandwich",
+                        "baseProductShortDescription": "Classic Beef, Onions, Peppers & Cheese Sandwich served with Coleslaw & Potatoes",
+                        "imageName": "08dda4dd-3e24-2b23-3e24-194801000000.webp",
+                        "productVersionTypeName": "Standard",
+                        "productVersionTypeIsSystemReserved": true,
+                        "price": 880.0000,
+                        "displaySequence": 0,
+                        "vendor": null
+                      },
+                      {
+                        "id": 5,
+                        "baseProductId": 202,
+                        "baseProductName": "Panzanella",
+                        "baseProductShortDescription": "Homemade Bread Salad with Seasonal Vegetables",
+                        "imageName": "08dda4dd-3d7e-684e-3e24-194801000000.webp",
+                        "productVersionTypeName": "Standard",
+                        "productVersionTypeIsSystemReserved": true,
+                        "price": 880.0000,
+                        "displaySequence": 1,
+                        "vendor": null
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "isPaged": false,
+            "pagingInfo": {
+              "pageNo": 1,
+              "pageSize": 1,
+              "totalRecordCount": 1,
+              "totalPageCount": 1,
+              "hasNextPage": false
+            }
+          }
+        };
+
+        const result = await Menu.generateHTML(sampleApiResponse, new Date(2025, 8, 18));
+
+        expect(result).toContain('Philly Cheesesteak Sandwich');
+    });
+})

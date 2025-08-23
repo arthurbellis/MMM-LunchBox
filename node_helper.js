@@ -2,6 +2,8 @@ const NodeHelper = require("node_helper");
 const fetch = require("node-fetch");
 const Log = require("logger");
 
+const API_ENDPOINT = 'https://asij.lunchtab.app/api/v1/salesbusinesstypes/1/publishedmenus/1';
+
 module.exports = NodeHelper.create({
   start: function () {
     Log.log("Starting node helper for: " + this.name);
@@ -22,8 +24,15 @@ module.exports = NodeHelper.create({
   fetchAndProcessMenu: async function () {
     Log.log("Fetching menu data.");
 
-    // TODO: Replace with the actual API endpoint
-    const apiUrl = "https://api.example.com/menu"; 
+    const today = new Date();
+
+    const midnightToday = new Date(today.setHours(0, 0, 0, 0));
+    const midnightTomorrow = new Date(midnightToday);
+    midnightTomorrow.setDate(midnightToday.getDate() + 1);
+
+    const startUtc = midnightToday.toISOString();
+    const endUtc = midnightTomorrow.toISOString();
+    const apiUrl = `${API_ENDPOINT}?startDateTimeUtc=${startUtc}&endDateTimeUtc=${endUtc}`; 
     
     try {
       const response = await fetch(apiUrl);
