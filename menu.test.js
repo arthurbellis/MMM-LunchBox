@@ -63,12 +63,22 @@ describe("Tests", () => {
 
   test('collapse menuDays into flat list', () => {
     const result = Menu._getAllMenuDays(sampleApiResponse);
-    console.log(result);
     expect(result.length).toBe(2);
   });
 
-  test("Parser finds 5 days in sample file and picks the right one", () => {
-    const result = Menu.generateHTML(sampleApiResponse, new Date(2025, 8, 18));
+  test('getMenuDay can pick the right date', () => {
+    const result = Menu._getMenuDay(sampleApiResponse, new Date(2025, 7, 18));
+    expect(result).toBeInstanceOf(Object);
+    expect(result.menuItems[0].baseProductName).toBe("Philly Cheesesteak Sandwich");
+  });
+
+  test('getMenuDay returns null when date not found', () => {
+    const result = Menu._getMenuDay(sampleApiResponse, new Date(2025, 0, 1));
+    expect(result).toBeNull();
+  });
+
+  test('generateHTML shows right food', () => {
+    const result = Menu.generateHTML(sampleApiResponse, new Date(2025, 7, 18));
     expect(result).toContain('Philly Cheesesteak Sandwich');
   });
 })

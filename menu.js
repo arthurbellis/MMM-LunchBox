@@ -27,6 +27,23 @@ const Menu = {
       console.log(response);
       return [];
     }
+  },
+
+  _getMenuDay: function (response, today = new Date()) {
+    const menuDays = Menu._getAllMenuDays(response);
+    var toReturn = null;
+    menuDays.forEach((menuDay) => {
+      // assume API response is in UTC, and we're in JST
+      console.log("checking dates...");
+      console.log(menuDay.startDateUtc.slice(0,10));
+      console.log(today.toISOString().slice(0,10));
+      if (menuDay.startDateUtc.slice(0,10) === today.toISOString().slice(0,10)) {
+        console.log('RETURNING SOMETHING');
+        console.log(menuDay);
+        toReturn = menuDay;
+      }
+    });
+    return toReturn;
   }
 }
 
