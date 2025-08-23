@@ -1,12 +1,10 @@
 const NodeHelper = require("node_helper");
-const ParseMenu = require("./parsemenu.js");
-
-const fs = require("fs");
+const fetch = require("node-fetch");
 const Log = require("logger");
 
 module.exports = NodeHelper.create({
   start: function () {
-    Log.log("Starting node helper ... for: " + this.name);
+    Log.log("Starting node helper for: " + this.name);
     this.isHelperActive = true;
   },
 
@@ -15,32 +13,70 @@ module.exports = NodeHelper.create({
   },
 
   socketNotificationReceived: function (notification, payload) {
-    Log.log("Lunch HERE");
     if (notification === "MODULE_READY") {
-        Log.info("lunchbox module ready");
+      Log.info("LunchBox module ready, fetching initial menu.");
+      this.fetchAndProcessMenu();
     }
-    this.parseMenus();
   },
 
-  parseMenus: async function () {
-    Log.log("Lunch parseMenus");
+  fetchAndProcessMenu: async function () {
+    Log.log("Fetching menu data.");
 
-    const menu_html = await ParseMenu.getMenuHTMLToDisplay(this.path + "/menus/latest.html");
+    // TODO: Replace with the actual API endpoint
+    const apiUrl = "https://api.example.com/menu"; 
+    
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const menuJson = await response.json();
+      
+      const menuHtml = this.generateMenuHtml(menuJson);
+      
+      this.sendSocketNotification("LUNCHBOX_MENU", { menu_html: menuHtml });
+    } catch (error) {
+      Log.error("Error fetching or processing menu:", error);
+      // Optionally send an error to the frontend
+      const errorHtml = `<div class="error">Failed to load menu. Please check logs.</div>`;
+      this.sendSocketNotification("LUNCHBOX_MENU", { menu_html: errorHtml });
+    }
 
-    this.sendSocketNotification("LUNCHBOX_MENU", {menu_html: menu_html});
-
-    this.scheduleNextParseMenus();
+    this.scheduleNextFetch();
   },
 
-  scheduleNextParseMenus: function () {
-    var _this = this;
-    Log.log("schedule next parse menus");
+  generateMenuHtml: function (menuJson) {
+    // TODO: Replace this with logic based on the actual JSON structure.
+    // This is a placeholder based on a hypothetical structure.
+    // Assuming JSON is an array of objects like: { date: "2025-08-23", items: ["Soup", "Salad"] }
+    
+    let html = '<div class="menu-container">';
+    
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+
+    const todaysMenu = menuJson.find(day => day.date === todayString);
+
+    if (todaysMenu && todaysMenu.items) {
+      html += `<h2>Menu for ${today.toLocaleDateString()}</h2>`;
+      html += "<ul>";
+      todaysMenu.items.forEach(item => {
+        html += `<li>${item}</li>`;
+      });
+      html += "</ul>";
+    } else {
+      html += `<p>${this.defaults.empty_text || "No menu available for today."}</p>`;
+    }
+
+    html += '</div>';
+    return html;
+  },
+
+  scheduleNextFetch: function () {
     if (this.isHelperActive) {
-      Log.log("2 schedule next parse menus");
-      setTimeout(function () {
-        Log.log("in timeout schedule next parse menus");
-        _this.parseMenus();
-      }, 60 * 1000);
+      setTimeout(() => {
+        this.fetchAndProcessMenu();
+      }, 60 * 60 * 1000); // Fetch every hour
     }
   },
 });
