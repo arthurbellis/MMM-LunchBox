@@ -2,14 +2,17 @@ const Menu = {
   generateHTML: function (response, today = new Date()) {
     try {
       const menuDay = Menu._getMenuDay(response, today);
-      var toReturn = "<ul>\n";
+      var toReturn = "<h1>ASIJ Cafeteria, Monday, Aug 25</h1>\n<ul>\n";
 
       if (menuDay === null) {
         return 'No menu today.';
       }
 
       menuDay.menuItems.forEach((menuItem) => {
-        toReturn += `<li>${menuItem.baseProductName}</li>\n`;
+        toReturn += `<li>\n`;
+        toReturn += `  <span>${menuItem.baseProductName}</span>\n`;
+        toReturn += `  <img src="https://asij.lunchtab.app/api/v1/images/product/${menuItem.imageName}" />\n`;
+        toReturn += `</li>\n`;
       });
 
       toReturn += "</ul>\n";

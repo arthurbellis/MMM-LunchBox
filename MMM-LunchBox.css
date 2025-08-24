@@ -8,13 +8,50 @@ div.MMM-LunchBox h3 {
     color: #fff;
 }
 
-div.MMM-LunchBox h2 {
+div.MMM-LunchBox h1 {
     color: #fff;
+    font-size: 20px;
 }
 
-div.MMM-LunchBox div.menu-item p {
-    display: inline;
-    color: #ccc;
+/* Styling for the list */
+div.MMM-LunchBox ul {
+  list-style: none; /* Removes bullets */
+  margin: 0;
+  padding: 0;
+  display: flex; /* Enables Flexbox */
+  justify-content: space-around; /* Distributes items with space between */
+  gap: 15px; /* Adds space between items */
+}
+
+/* Styling for each list item */
+div.MMM-LunchBox li {
+  display: flex;
+  flex-direction: column; /* Stacks text and image vertically */
+  align-items: center; /* Centers items horizontally */
+  text-align: center;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 250px; /* Fixed width for each item */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Styling for the text */
+div.MMM-LunchBox span {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px; /* Space between image and text */
+}
+
+/* Styling for the image */
+div.MMM-LunchBox img {
+  width: 200px; /* Larger image for a more prominent icon */
+  height: auto;
+  border-radius: 5%; /* Makes the image circular */
+  object-fit: cover; /* Ensures image fills the circle without distortion */
 }
 
 div.MMM-LunchBox {
