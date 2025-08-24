@@ -1,6 +1,6 @@
 const NodeHelper = require("node_helper");
-const fetch = require("node-fetch");
 const Log = require("logger");
+const Menu = require("./menu.js");
 
 const API_ENDPOINT = 'https://asij.lunchtab.app/api/v1/salesbusinesstypes/1/publishedmenus/1';
 
@@ -27,13 +27,14 @@ module.exports = NodeHelper.create({
     const apiUrl = Menu.generateAPIURL(API_ENDPOINT);
     
     try {
+      const { default: fetch } = await import('node-fetch');
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const menuJson = await response.json();
       
-      const menuHtml = Menu.generateMenuHtml(menuJson);
+      const menuHtml = Menu.generateHTML(menuJson);
       
       this.sendSocketNotification("LUNCHBOX_MENU", { menu_html: menuHtml });
     } catch (error) {
