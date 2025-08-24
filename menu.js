@@ -48,8 +48,8 @@ const Menu = {
   },
 
   // generate API URL to retrieve data for today
-  generateAPIURL: function () {
-    return "https://example.com"
+  generateAPIURL: function (apiEndpoint = 'https://asij.lunchtab.app/api/v1/salesbusinesstypes/1/publishedmenus/1', today = new Date()) {
+    return `${apiEndpoint}${Menu._getAPIParams(today)}`;
   },
 
   // generate time in UTC, for beginning of day in Japan

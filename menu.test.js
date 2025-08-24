@@ -89,8 +89,9 @@ describe("Tests", () => {
 
   // API utils
   test('generateAPIURL runs', () => {
-    const result = Menu.generateAPIURL();
-    expect(result).toMatch(/^http/);
+    const today = new Date('2025-02-04T01:00:00.000Z');
+    const result = Menu.generateAPIURL('https://example.com/api', today);
+    expect(result).toBe('https://example.com/api?startDateTimeUtc=2025-02-03T15%3A00%3A00.000Z&endDateTimeUtc=2025-02-04T15%3A00%3A00.000Z');
   });
 
   // assumes we're in JST, UTC+9
