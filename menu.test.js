@@ -81,4 +81,9 @@ describe("Tests", () => {
     const result = Menu.generateHTML(sampleApiResponse, new Date(2025, 7, 18));
     expect(result).toContain('Philly Cheesesteak Sandwich');
   });
+
+  test('generateHTML shows nothing for wrong date', () => {
+    const result = Menu.generateHTML(sampleApiResponse, new Date(2025, 0, 1));
+    expect(result).not.toContain('Philly Cheesesteak Sandwich');
+  });
 })
