@@ -77,13 +77,39 @@ describe("Tests", () => {
     expect(result).toBeNull();
   });
 
-  test('generateHTML shows right food', () => {
+  test('generateHTML shows right food on correct date', () => {
     const result = Menu.generateHTML(sampleApiResponse, new Date(2025, 7, 18));
     expect(result).toContain('Philly Cheesesteak Sandwich');
   });
 
-  test('generateHTML shows nothing for wrong date', () => {
+  test('generateHTML does not show food for different date', () => {
     const result = Menu.generateHTML(sampleApiResponse, new Date(2025, 0, 1));
     expect(result).not.toContain('Philly Cheesesteak Sandwich');
+  });
+
+  // API utils
+  test('generateAPIURL runs', () => {
+    const result = Menu.generateAPIURL();
+    expect(result).toMatch(/^http/);
+  });
+
+  // assumes we're in JST, UTC+9
+  test('_getTodayString converts from JST -> UTC', () => {
+    // 2025-02-04 10am in JST:
+    const today = new Date('2025-02-04T01:00:00.000Z');
+    const result = Menu._getTodayString(today);
+    //
+    // 2025-02-04 0:00am in JST:
+    expect(result).toBe('2025-02-03T15:00:00.000Z');
+  });
+
+  // assumes we're in JST, UTC+9
+  test('_getTomorrowString converts from JST -> UTC', () => {
+    // 2025-02-04 10am in JST:
+    const today = new Date('2025-02-04T01:00:00.000Z');
+    const result = Menu._getTomorrowString(today);
+
+    // 2025-02-05 0:00am in JST:
+    expect(result).toBe('2025-02-04T15:00:00.000Z');
   });
 })

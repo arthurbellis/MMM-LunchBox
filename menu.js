@@ -45,7 +45,29 @@ const Menu = {
       }
     });
     return toReturn;
+  },
+
+  // generate API URL to retrieve data for today
+  generateAPIURL: function () {
+    return "https://example.com"
+  },
+
+  // generate time in UTC, for beginning of day in Japan
+  _getTodayString: function (today = new Date()) {
+    const midnightToday = new Date(today.setHours(0, 0, 0, 0));
+    return midnightToday.toISOString();
+  },
+
+  // generate time in UTC, for beginning of day in Japan
+  _getTomorrowString: function (today = new Date()) {
+    const midnightToday = new Date(today.setHours(0, 0, 0, 0));
+
+    const midnightTomorrow = new Date(midnightToday);
+
+    midnightTomorrow.setDate(midnightToday.getDate() + 1);
+    return midnightTomorrow.toISOString();
   }
+    // const apiUrl = `${API_ENDPOINT}?startDateTimeUtc=${startUtc}&endDateTimeUtc=${endUtc}`; 
 }
 
 module.exports = Menu
