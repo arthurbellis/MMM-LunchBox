@@ -4,6 +4,10 @@ const Menu = {
       const menuDay = Menu._getMenuDay(response, today);
       var toReturn = "<ul>\n";
 
+      if (menuDay === null) {
+        return 'No menu today.';
+      }
+
       menuDay.menuItems.forEach((menuItem) => {
         toReturn += `<li>${menuItem.baseProductName}</li>\n`;
       });
@@ -13,6 +17,7 @@ const Menu = {
       return toReturn;
     } catch (error) {
       console.log('Failed to parse response json:');
+      console.log(error);
       console.log(response);
       return `failed to parse`;
     }
@@ -59,13 +64,13 @@ const Menu = {
   },
 
   // generate time in UTC, for beginning of day in Japan
-  _getTomorrowString: function (today = new Date()) {
+  _getNextDayString: function (today = new Date()) {
     const midnightToday = new Date(today.setHours(0, 0, 0, 0));
 
-    const midnightTomorrow = new Date(midnightToday);
+    const midnightNextDay = new Date(midnightToday);
 
-    midnightTomorrow.setDate(midnightToday.getDate() + 1);
-    return midnightTomorrow.toISOString();
+    midnightNextDay.setDate(midnightToday.getDate() + 2);
+    return midnightNextDay.toISOString();
   },
 
   // returns API parameters as a CGI parameters string, with
@@ -73,7 +78,7 @@ const Menu = {
   // example: "?one=...&two=..."
   _getAPIParams: function (today = new Date()) {
     const startUtc = encodeURIComponent(Menu._getTodayString(today));
-    const endUtc = encodeURIComponent(Menu._getTomorrowString(today));
+    const endUtc = encodeURIComponent(Menu._getNextDayString(today));
     return `?startDateTimeUtc=${startUtc}&endDateTimeUtc=${endUtc}`; 
   }
 }
