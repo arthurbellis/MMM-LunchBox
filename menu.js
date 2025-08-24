@@ -66,8 +66,16 @@ const Menu = {
 
     midnightTomorrow.setDate(midnightToday.getDate() + 1);
     return midnightTomorrow.toISOString();
+  },
+
+  // returns API parameters as a CGI parameters string, with
+  // the parameter values properly encoded
+  // example: "?one=...&two=..."
+  _getAPIParams: function (today = new Date()) {
+    const startUtc = encodeURIComponent(Menu._getTodayString(today));
+    const endUtc = encodeURIComponent(Menu._getTomorrowString(today));
+    return `?startDateTimeUtc=${startUtc}&endDateTimeUtc=${endUtc}`; 
   }
-    // const apiUrl = `${API_ENDPOINT}?startDateTimeUtc=${startUtc}&endDateTimeUtc=${endUtc}`; 
 }
 
 module.exports = Menu

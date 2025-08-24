@@ -112,4 +112,10 @@ describe("Tests", () => {
     // 2025-02-05 0:00am in JST:
     expect(result).toBe('2025-02-04T15:00:00.000Z');
   });
+
+  test('_getAPIParams returns well-formatted result', () => {
+    const today = new Date('2025-02-04T01:00:00.000Z');
+    const result = Menu._getAPIParams(today);
+    expect(result).toBe('?startDateTimeUtc=2025-02-03T15%3A00%3A00.000Z&endDateTimeUtc=2025-02-04T15%3A00%3A00.000Z');
+  });
 })
