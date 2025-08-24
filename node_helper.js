@@ -24,15 +24,7 @@ module.exports = NodeHelper.create({
   fetchAndProcessMenu: async function () {
     Log.log("Fetching menu data.");
 
-    const today = new Date();
-
-    const midnightToday = new Date(today.setHours(0, 0, 0, 0));
-    const midnightTomorrow = new Date(midnightToday);
-    midnightTomorrow.setDate(midnightToday.getDate() + 1);
-
-    const startUtc = midnightToday.toISOString();
-    const endUtc = midnightTomorrow.toISOString();
-    const apiUrl = `${API_ENDPOINT}?startDateTimeUtc=${startUtc}&endDateTimeUtc=${endUtc}`; 
+    const apiUrl = Menu.generateAPIURL(API_ENDPOINT);
     
     try {
       const response = await fetch(apiUrl);
@@ -41,12 +33,12 @@ module.exports = NodeHelper.create({
       }
       const menuJson = await response.json();
       
-      const menuHtml = this.generateMenuHtml(menuJson);
+      const menuHtml = Menu.generateMenuHtml(menuJson);
       
       this.sendSocketNotification("LUNCHBOX_MENU", { menu_html: menuHtml });
     } catch (error) {
       Log.error("Error fetching or processing menu:", error);
-      // Optionally send an error to the frontend
+
       const errorHtml = `<div class="error">Failed to load menu. Please check logs.</div>`;
       this.sendSocketNotification("LUNCHBOX_MENU", { menu_html: errorHtml });
     }
@@ -54,6 +46,7 @@ module.exports = NodeHelper.create({
     this.scheduleNextFetch();
   },
 
+  /*
   generateMenuHtml: function (menuJson) {
     // TODO: Replace this with logic based on the actual JSON structure.
     // This is a placeholder based on a hypothetical structure.
@@ -80,12 +73,13 @@ module.exports = NodeHelper.create({
     html += '</div>';
     return html;
   },
+  */
 
   scheduleNextFetch: function () {
     if (this.isHelperActive) {
       setTimeout(() => {
         this.fetchAndProcessMenu();
-      }, 60 * 60 * 1000); // Fetch every hour
+      }, 6 * 60 * 60 * 1000); // Fetch every 6 hours
     }
   },
 });
