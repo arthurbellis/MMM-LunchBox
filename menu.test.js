@@ -80,6 +80,7 @@ describe("Tests", () => {
   test('generateHTML shows right food on correct date', () => {
     const result = Menu.generateHTML(sampleApiResponse, new Date(2025, 7, 18));
     expect(result).toContain('Philly Cheesesteak Sandwich');
+    expect(result).toContain('Monday, August 18');
   });
 
   test('generateHTML does not show food for different date', () => {
@@ -118,5 +119,10 @@ describe("Tests", () => {
     const today = new Date('2025-02-04T01:00:00.000Z');
     const result = Menu._getAPIParams(today);
     expect(result).toBe('?startDateTimeUtc=2025-02-03T15%3A00%3A00.000Z&endDateTimeUtc=2025-02-05T15%3A00%3A00.000Z');
+  });
+
+  test('_formatDate generates good date', () => {
+    const result = Menu._formatDate('2025-08-23T15:00:00.000Z');
+    expect(result).toBe('Sunday, August 24');
   });
 })

@@ -2,11 +2,12 @@ const Menu = {
   generateHTML: function (response, today = new Date()) {
     try {
       const menuDay = Menu._getMenuDay(response, today);
-      var toReturn = "<h1>ASIJ Cafeteria, Monday, Aug 25</h1>\n<ul>\n";
 
       if (menuDay === null) {
         return 'No menu today.';
       }
+
+      var toReturn = `<h1>ASIJ Cafeteria, ${Menu._formatDate(menuDay.startDateUtc)}</h1>\n<ul>\n`;
 
       menuDay.menuItems.forEach((menuItem) => {
         toReturn += `<li>\n`;
@@ -24,6 +25,18 @@ const Menu = {
       console.log(response);
       return `failed to parse`;
     }
+  },
+
+  _formatDate: function (dateString) {
+    const date = new Date(dateString);
+
+    const options = {
+      weekday: 'long',  // e.g., "Monday"
+      month: 'long',    // e.g., "August"
+      day: 'numeric'    // e.g., "29"
+    };
+
+    return date.toLocaleDateString('en-US', options);
   },
 
   _getAllMenuDays: function (response) {
