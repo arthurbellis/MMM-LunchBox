@@ -21,6 +21,7 @@ div.MMM-LunchBox ul {
   display: flex; /* Enables Flexbox */
   justify-content: space-around; /* Distributes items with space between */
   gap: 15px; /* Adds space between items */
+  width: 600px;
 }
 
 /* Styling for each list item */
@@ -55,5 +56,5 @@ div.MMM-LunchBox img {
 }
 
 div.MMM-LunchBox {
-    max-width: 300px;
+    max-width: 600px;
 }
